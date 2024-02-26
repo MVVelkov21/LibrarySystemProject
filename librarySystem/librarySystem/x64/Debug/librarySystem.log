@@ -1,3 +1,4 @@
 ﻿  main.cpp
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  librarySystem.vcxproj -> C:\Users\MVVelkov21\Source\Repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\x64\Debug\librarySystem.exe
+  mainMenu.cpp
+  Generating Code...
+  librarySystem.vcxproj -> C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\x64\Debug\librarySystem.exe

@@ -1,0 +1,10 @@
+﻿  main.cpp
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\libSysLib\mainMenu.h(6,9): error C2143: syntax error: missing ';' before '*'
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\libSysLib\mainMenu.h(6,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\libSysLib\mainMenu.h(6,13): error C2238: unexpected token(s) preceding ';'
+  mainMenu.cpp
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\libSysLib\mainMenu.h(6,9): error C2143: syntax error: missing ';' before '*'
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\libSysLib\mainMenu.h(6,9): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\libSysLib\mainMenu.h(6,13): error C2238: unexpected token(s) preceding ';'
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\librarySystem\mainMenu.cpp(4,38): error C2065: 'db': undeclared identifier
+  Generating Code...
