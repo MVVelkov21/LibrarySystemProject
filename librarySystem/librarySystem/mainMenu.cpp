@@ -1,4 +1,4 @@
-#include "../libSysLib/precompiledHeader.h"
+#include "../libSysLib/mainMenu.h"
 
 bool mainMenu::isUserExists(const string& username, sqlite3* db) {
     const char* selectQuery = "SELECT * FROM LoginInfo WHERE username = ?;";
@@ -17,37 +17,48 @@ bool mainMenu::isUserExists(const string& username, sqlite3* db) {
     return result == SQLITE_ROW;
 }
 
-void mainMenu::login(sqlite3* db) {
+bool mainMenu::checkUser(sqlite3* db) {
     string username, password;
     cout << "Enter username: ";
     cin >> username;
     cout << "Enter password: ";
     char ch;
-    while (true) {
+    do {
         ch = _getch();
 
-        if (ch == '\r' || ch == '\n') {
-            if (password.length() >= 6 &&
-                std::any_of(password.begin(), password.end(), ::isdigit) &&
-                std::any_of(password.begin(), password.end(), ::isupper) &&
-                strpbrk(password.c_str(), "!@#$%^&*()-_+=<>?,./;:'\"[]{}\\|`~") != nullptr) {
-                break;
-            }
-            else {
-                std::cout << "\nInvalid password.";
-                _getch();
-                exit(0);
-            }
-        }
-        else {
+        if (ch != '\r' && ch != '\n') {
             password.push_back(ch);
             std::cout << '*';
         }
-    }
+    } while (ch != '\r' && ch != '\n');
     cout << endl;
 
+    const char* selectQuery = "SELECT * FROM LoginInfo WHERE username = ? AND password = ?;";
+
+    sqlite3_stmt* stmt;
+    if (sqlite3_prepare_v2(db, selectQuery, -1, &stmt, nullptr) != SQLITE_OK) {
+        cout << "Error preparing statement" << endl;
+        return false;
+    }
+
+    sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, password.c_str(), -1, SQLITE_STATIC);
+
+    int result = sqlite3_step(stmt);
+
+    if (result == SQLITE_ROW) {
+        //dash.loggedInUsername = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+    }
+
+    sqlite3_finalize(stmt);
+
+    return result == SQLITE_ROW;
+}
+
+void mainMenu::saveLoginInfo(const string& username, const string& password, sqlite3* db) {
     if (isUserExists(username, db)) {
-        cout << "User with the same username already exists. Please choose a different username." << endl;        
+        cout << "User with the same username already exists. Please choose a different username." << endl;
+        _getch();
         return;
     }
 
@@ -77,6 +88,7 @@ void mainMenu::login(sqlite3* db) {
     }
     else {
         cout << "User information saved to the database." << endl;
+        _getch();
     }
 
     sqlite3_finalize(stmt);
@@ -105,13 +117,62 @@ void mainMenu::windowInit() {
 
             if (CheckCollisionPointRec(mousePosition, buttonRect1)) {
                 printf("Button 1 clicked!\n");
-                login(db);
+                //login(db);
+                choice = 1;
             }
             else if (CheckCollisionPointRec(mousePosition, buttonRect2)) {
                 printf("Button 2 clicked!\n");
+                choice = 2;
                 
             }
         }
+
+        if (choice == 2) {
+            cout << "Enter a password atleast 6 characters long," << endl;
+            cout << "including atleast 1 capital letter, number" << endl;
+            cout << "and a special symbol." << endl << endl;
+            string username, password;
+            cout << "Enter username: ";
+            cin >> username;
+            cout << "Enter password: ";
+            char ch;
+            while (true) {
+                ch = _getch();
+
+                if (ch == '\r' || ch == '\n') {
+                    if (password.length() >= 6 &&
+                        std::any_of(password.begin(), password.end(), ::isdigit) &&
+                        std::any_of(password.begin(), password.end(), ::isupper) &&
+                        strpbrk(password.c_str(), "!@#$%^&*()-_+=<>?,./;:'\"[]{}\\|`~") != nullptr) {
+                        break;
+                    }
+                    else {
+                        std::cout << "\nInvalid password.";
+                        _getch();
+                        exit(0);
+                    }
+                }
+                else {
+                    password.push_back(ch);
+                    std::cout << '*';
+                }
+            }
+            cout << endl;
+            saveLoginInfo(username, password, db);
+        }
+        else if (choice == 1) {
+            if (checkUser(db)) {
+                cout << "Login successful! Press ENTER to continue." << endl;
+                _getch();
+                system("cls");
+                //dash.userDashboard();
+            }
+            else {
+                cout << "Login failed. Invalid username or password." << endl;
+                _getch();
+            }
+        }
+        choice = 0;
 
         BeginDrawing();
         ClearBackground(BLACK);
