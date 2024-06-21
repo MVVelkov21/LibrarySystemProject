@@ -7,6 +7,7 @@
 #include <ctime>
 #include <algorithm>
 #include <cctype>
+#include <string>
 #include "../raylib/include/raylib.h"
 
 using namespace std;

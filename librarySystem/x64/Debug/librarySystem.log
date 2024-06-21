@@ -1,2 +1,7 @@
 ﻿  dashboard.cpp
-  librarySystem.vcxproj -> C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\x64\Debug\librarySystem.exe
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(47,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(142,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(142,95): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(142,82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(142,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  librarySystem.vcxproj -> C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\x64\Debug\librarySystem.exe
