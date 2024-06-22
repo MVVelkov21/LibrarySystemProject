@@ -1,7 +1,7 @@
 ﻿  dashboard.cpp
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(47,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(142,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(142,95): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(142,82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(142,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(137,20): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(199,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(199,95): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(199,82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(199,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   librarySystem.vcxproj -> C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\x64\Debug\librarySystem.exe
