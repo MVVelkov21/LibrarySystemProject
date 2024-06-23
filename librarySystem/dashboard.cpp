@@ -91,7 +91,7 @@ void dashboard::viewDatabase() {
     string sql = "SELECT * FROM BOOKS;";
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, 0);
 
-    const int maxRecords = 100;  // Max records to display
+    const int maxRecords = 1000;  // Max records to display
     vector<string> records;
     while (sqlite3_step(stmt) == SQLITE_ROW && records.size() < maxRecords) {
         int id = sqlite3_column_int(stmt, 0);
@@ -147,6 +147,166 @@ void dashboard::viewDatabase() {
 
         if (IsKeyPressed(KEY_ESCAPE)) {
             viewingDatabase = false;
+        }
+
+        EndDrawing();
+    }
+}
+
+#define MAX_INPUT_CHARS 100
+
+void dashboard::DrawInputBox(Rectangle textBox, char* inputText, int& letterCount, bool mouseOnText, int framesCounter) {
+    DrawRectangleRec(textBox, DARKGRAY);
+    if (mouseOnText) DrawRectangleLines((int)textBox.x, (int)textBox.y, (int)textBox.width, (int)textBox.height, GREEN);
+    else DrawRectangleLines((int)textBox.x, (int)textBox.y, (int)textBox.width, (int)textBox.height, DARKGRAY);
+
+    DrawText(inputText, (int)textBox.x + 5, (int)textBox.y + 8, 20, GREEN);
+
+    if (mouseOnText) {
+        if (letterCount < MAX_INPUT_CHARS) {
+            if (((framesCounter / 20) % 2) == 0) DrawText("_", (int)textBox.x + 8 + MeasureText(inputText, 20), (int)textBox.y + 12, 20, GREEN);
+        }
+    }
+}
+
+void dashboard::addBook() {
+    // Input text variables
+    char isbn[MAX_INPUT_CHARS + 1] = "\0";
+    int isbnCount = 0;
+
+    char title[MAX_INPUT_CHARS + 1] = "\0";
+    int titleCount = 0;
+
+    char author[MAX_INPUT_CHARS + 1] = "\0";
+    int authorCount = 0;
+
+    char genre[MAX_INPUT_CHARS + 1] = "\0";
+    int genreCount = 0;
+
+    char pubDate[MAX_INPUT_CHARS + 1] = "\0";
+    int pubDateCount = 0;
+
+    Rectangle isbnBox = { 400, 100, 225, 30 };
+    Rectangle titleBox = { 400, 150, 225, 30 };
+    Rectangle authorBox = { 400, 200, 225, 30 };
+    Rectangle genreBox = { 400, 250, 225, 30 };
+    Rectangle pubDateBox = { 400, 300, 225, 30 };
+
+    Rectangle addButton = { 400, 350, 100, 30 };
+    Rectangle cancelButton = { 525, 350, 100, 30 };
+
+    bool mouseOnIsbn = false;
+    bool mouseOnTitle = false;
+    bool mouseOnAuthor = false;
+    bool mouseOnGenre = false;
+    bool mouseOnPubDate = false;
+
+    int framesCounter = 0;
+
+    while (!WindowShouldClose()) {
+        framesCounter++;
+
+        // Update
+        mouseOnIsbn = CheckCollisionPointRec(GetMousePosition(), isbnBox);
+        mouseOnTitle = CheckCollisionPointRec(GetMousePosition(), titleBox);
+        mouseOnAuthor = CheckCollisionPointRec(GetMousePosition(), authorBox);
+        mouseOnGenre = CheckCollisionPointRec(GetMousePosition(), genreBox);
+        mouseOnPubDate = CheckCollisionPointRec(GetMousePosition(), pubDateBox);
+
+        if (mouseOnIsbn || mouseOnTitle || mouseOnAuthor || mouseOnGenre || mouseOnPubDate) {
+            SetMouseCursor(MOUSE_CURSOR_IBEAM);
+
+            int key = GetCharPressed();
+            while (key > 0) {
+                if ((key >= 32) && (key <= 125)) {
+                    if (mouseOnIsbn && isbnCount < MAX_INPUT_CHARS) {
+                        isbn[isbnCount] = (char)key;
+                        isbn[isbnCount + 1] = '\0';
+                        isbnCount++;
+                    }
+                    else if (mouseOnTitle && titleCount < MAX_INPUT_CHARS) {
+                        title[titleCount] = (char)key;
+                        title[titleCount + 1] = '\0';
+                        titleCount++;
+                    }
+                    else if (mouseOnAuthor && authorCount < MAX_INPUT_CHARS) {
+                        author[authorCount] = (char)key;
+                        author[authorCount + 1] = '\0';
+                        authorCount++;
+                    }
+                    else if (mouseOnGenre && genreCount < MAX_INPUT_CHARS) {
+                        genre[genreCount] = (char)key;
+                        genre[genreCount + 1] = '\0';
+                        genreCount++;
+                    }
+                    else if (mouseOnPubDate && pubDateCount < MAX_INPUT_CHARS) {
+                        pubDate[pubDateCount] = (char)key;
+                        pubDate[pubDateCount + 1] = '\0';
+                        pubDateCount++;
+                    }
+                }
+                key = GetCharPressed();
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE)) {
+                if (mouseOnIsbn && isbnCount > 0) {
+                    isbnCount--;
+                    isbn[isbnCount] = '\0';
+                }
+                else if (mouseOnTitle && titleCount > 0) {
+                    titleCount--;
+                    title[titleCount] = '\0';
+                }
+                else if (mouseOnAuthor && authorCount > 0) {
+                    authorCount--;
+                    author[authorCount] = '\0';
+                }
+                else if (mouseOnGenre && genreCount > 0) {
+                    genreCount--;
+                    genre[genreCount] = '\0';
+                }
+                else if (mouseOnPubDate && pubDateCount > 0) {
+                    pubDateCount--;
+                    pubDate[pubDateCount] = '\0';
+                }
+            }
+        }
+        else {
+            SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+        }
+
+        // Draw
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        DrawTextEx(customFont, "Add Book", { (800 - MeasureTextEx(customFont, "Add Book", 80, -3).x) / 2, 20 }, 80, -3, GREEN);
+
+        DrawTextEx(customFont, "ISBN:", { 300, 100 }, 20, -2, GREEN);
+        DrawTextEx(customFont, "Title:", { 300, 150 }, 20, -2, GREEN);
+        DrawTextEx(customFont, "Author:", { 300, 200 }, 20, -2, GREEN);
+        DrawTextEx(customFont, "Genre:", { 300, 250 }, 20, -2, GREEN);
+        DrawTextEx(customFont, "Publication Date:", { 300, 300 }, 20, -2, GREEN);
+
+        DrawInputBox(isbnBox, isbn, isbnCount, mouseOnIsbn, framesCounter);
+        DrawInputBox(titleBox, title, titleCount, mouseOnTitle, framesCounter);
+        DrawInputBox(authorBox, author, authorCount, mouseOnAuthor, framesCounter);
+        DrawInputBox(genreBox, genre, genreCount, mouseOnGenre, framesCounter);
+        DrawInputBox(pubDateBox, pubDate, pubDateCount, mouseOnPubDate, framesCounter);
+
+        // Draw buttons
+        DrawRectangleRec(addButton, GREEN);
+        DrawTextEx(customFont, "Add", { addButton.x + 10, addButton.y + 5 }, 20, -2, BLACK);
+
+        DrawRectangleRec(cancelButton, RED);
+        DrawTextEx(customFont, "Cancel", { cancelButton.x + 10, cancelButton.y + 5 }, 20, -2, BLACK);
+
+        // Handle button clicks
+        if (CheckCollisionPointRec(GetMousePosition(), addButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            insertBook(isbn, title, author, genre, pubDate);
+            break;  // Exit form after adding book
+        }
+        if (CheckCollisionPointRec(GetMousePosition(), cancelButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            break;  // Exit form without adding book
         }
 
         EndDrawing();
@@ -238,7 +398,8 @@ void dashboard::windowInit() {
                 DrawTextEx(customFont, "Add Book", { addBookButton.x + 10, addBookButton.y + 5 }, 20, -2, BLACK);
                 if (CheckCollisionPointRec(GetMousePosition(), addBookButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
                     // Implement functionality for adding a book
-                    cout << "Book added\n";
+                    addBook();
+                    framesCounter = 0;
                 }
 
                 // Remove Book button
