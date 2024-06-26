@@ -12,7 +12,7 @@ void dashboard::createDatabase() {
         "AUTHOR TEXT NOT NULL, "
         "GENRE TEXT NOT NULL, "
         "PUBLICATION_DATE TEXT NOT NULL, "
-        "STATUS TEXT NOT NULL DEFAULT 'FREE');"; // Add STATUS column with default value 'FREE'
+        "STATUS TEXT NOT NULL DEFAULT 'FREE');";
 
     char* messageError;
     exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
@@ -92,7 +92,7 @@ void dashboard::viewDatabase() {
     string sql = "SELECT * FROM BOOKS;";
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, 0);
 
-    const int maxRecords = 1000;  // Max records to display
+    const int maxRecords = 1000;
     vector<string> records;
     while (sqlite3_step(stmt) == SQLITE_ROW && records.size() < maxRecords) {
         int id = sqlite3_column_int(stmt, 0);
@@ -115,16 +115,15 @@ void dashboard::viewDatabase() {
     sqlite3_close(DB);
 
     bool viewingDatabase = true;
-    int scrollOffset = 0;  // Scroll position offset
-    const int maxVisibleLines = 20;  // Max number of lines visible at a time
-    const int lineHeight = 20;  // Height of each line of text
-    const int tableWidth = 800;  // Width of the table display area
+    int scrollOffset = 0; 
+    const int maxVisibleLines = 20; 
+    const int lineHeight = 20; 
+    const int tableWidth = 800;
 
     while (viewingDatabase && !WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
-
-        // Calculate visible records based on current scroll offset
+        
         int startIndex = scrollOffset;
         int endIndex = min(scrollOffset + maxVisibleLines, static_cast<int>(records.size()));
 
@@ -133,8 +132,7 @@ void dashboard::viewDatabase() {
             DrawTextEx(customFont, records[i].c_str(), { 20, static_cast<float>(yOffset) }, 20, 1, GREEN);
             yOffset += lineHeight;
         }
-
-        // Handle scrolling with mouse wheel
+        
         int scroll = GetMouseWheelMove();
         if (scroll != 0) {
             scrollOffset -= scroll;
@@ -170,8 +168,7 @@ void dashboard::DrawInputBox(Rectangle textBox, char* inputText, int& letterCoun
     }
 }
 
-void dashboard::addBook() {
-    // Input text variables
+void dashboard::addBook() {    
     char isbn[MAX_INPUT_CHARS + 1] = "\0";
     int isbnCount = 0;
 
@@ -206,8 +203,7 @@ void dashboard::addBook() {
 
     while (!WindowShouldClose()) {
         framesCounter++;
-
-        // Update
+        
         mouseOnIsbn = CheckCollisionPointRec(GetMousePosition(), isbnBox);
         mouseOnTitle = CheckCollisionPointRec(GetMousePosition(), titleBox);
         mouseOnAuthor = CheckCollisionPointRec(GetMousePosition(), authorBox);
@@ -275,8 +271,7 @@ void dashboard::addBook() {
         else {
             SetMouseCursor(MOUSE_CURSOR_DEFAULT);
         }
-
-        // Draw
+        
         BeginDrawing();
         ClearBackground(BLACK);
 
@@ -293,21 +288,19 @@ void dashboard::addBook() {
         DrawInputBox(authorBox, author, authorCount, mouseOnAuthor, framesCounter);
         DrawInputBox(genreBox, genre, genreCount, mouseOnGenre, framesCounter);
         DrawInputBox(pubDateBox, pubDate, pubDateCount, mouseOnPubDate, framesCounter);
-
-        // Draw buttons
+        
         DrawRectangleRec(addButton, GREEN);
         DrawTextEx(customFont, "Add", { addButton.x + 10, addButton.y + 5 }, 20, -2, BLACK);
 
         DrawRectangleRec(cancelButton, RED);
         DrawTextEx(customFont, "Cancel", { cancelButton.x + 10, cancelButton.y + 5 }, 20, -2, BLACK);
-
-        // Handle button clicks
+        
         if (CheckCollisionPointRec(GetMousePosition(), addButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             insertBook(isbn, title, author, genre, pubDate);
-            break;  // Exit form after adding book
+            break;  
         }
         if (CheckCollisionPointRec(GetMousePosition(), cancelButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            break;  // Exit form without adding book
+            break;  
         }
 
         EndDrawing();
@@ -427,15 +420,15 @@ void dashboard::generateBooks() {
     const char* genres[] = { "Fiction", "Non-Fiction", "Science", "History", "Art" };
     int numGenres = sizeof(genres) / sizeof(genres[0]);
 
-    srand(time(0)); // Seed random number generator
+    srand(time(0));
 
     for (int i = 0; i < 100; i++) {
-        string isbn = to_string(rand() % 1000000000 + 100000000); // Generate random ISBN
-        string title = "Book " + to_string(i + 1); // Generate title
-        string author = "Author " + to_string(rand() % 10 + 1); // Generate author
-        string genre = genres[rand() % numGenres]; // Generate random genre
-        string pubDate = to_string(rand() % 2022 + 1900) + "-" + to_string(rand() % 12 + 1) + "-" + to_string(rand() % 28 + 1); // Generate random publication date
-        string status = (rand() % 2 == 0) ? "FREE" : "TAKEN"; // Generate random status
+        string isbn = to_string(rand() % 1000000000 + 100000000); 
+        string title = "Book " + to_string(i + 1); 
+        string author = "Author " + to_string(rand() % 10 + 1);
+        string genre = genres[rand() % numGenres];
+        string pubDate = to_string(rand() % 2022 + 1900) + "-" + to_string(rand() % 12 + 1) + "-" + to_string(rand() % 28 + 1);
+        string status = (rand() % 2 == 0) ? "FREE" : "TAKEN";
 
         string sql = "INSERT INTO BOOKS (ISBN, TITLE, AUTHOR, GENRE, PUBLICATION_DATE, STATUS) VALUES ('" +
             isbn + "', '" + title + "', '" + author + "', '" + genre + "', '" + pubDate + "', '" + status + "');";
@@ -465,10 +458,10 @@ void dashboard::windowInit() {
     framesCounter = 0;
     showDropdown = false;
 
-    int totalBooks = getTotalBooks(); // Get total number of books from database
-    int takenBooks = getTakenBooks(); // Get total number of taken books from database
+    int totalBooks = getTotalBooks();
+    int takenBooks = getTakenBooks();
 
-    float takenBooksAngle = 0.0f; // Initialize taken books angle
+    float takenBooksAngle = 0.0f;
 
     while (!WindowShouldClose()) {
         framesCounter++;
@@ -479,8 +472,7 @@ void dashboard::windowInit() {
         ClearBackground(BLACK);
 
         DrawTextEx(customFont, "DASHBOARD", { (800 - MeasureTextEx(customFont, "DASHBOARD", 80, -3).x) / 2, (float)450 / 8 - 50 }, 80, -3, GREEN);
-
-        // Animate taken books angle
+        
         takenBooksAngle = min(360.0f * (takenBooks / (float)totalBooks), takenBooksAngle + 10.0f * progress);
 
         DrawCircleSector({ (float)screenWidth / 6, (float)screenHeight / 3 + 20 }, 70, 0, takenBooksAngle, 100, RED);
@@ -503,16 +495,14 @@ void dashboard::windowInit() {
             DrawTextEx(customFont, TextFormat("%d", (int)(booksTaken[i] * progress)), { graphStartX + i * (barWidth + barSpacing), graphStartY - barHeight - 20 }, 20, -2, GREEN);
             DrawTextEx(customFont, genres[i], { graphStartX + i * (barWidth + barSpacing), graphStartY + 10 }, 15, -2, GREEN);
         }
-
-        // Draw button to toggle drop-down menu
+        
         Rectangle buttonBounds = { (float)screenWidth - 150, 20, 120, 30 };
         if (CheckCollisionPointRec(GetMousePosition(), buttonBounds) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             showDropdown = !showDropdown;
         }
         DrawRectangleRec(buttonBounds, showDropdown ? DARKGREEN : GREEN);
         DrawTextEx(customFont, "Menu", { buttonBounds.x + 10, buttonBounds.y + 5 }, 20, -2, BLACK);
-
-        // Animate drop-down menu
+        
         if (showDropdown) {
             if (dropdownHeight < maxDropdownHeight) {
                 dropdownHeight += dropdownSpeed;
@@ -533,25 +523,26 @@ void dashboard::windowInit() {
                 DrawTextEx(customFont, "View All", { viewDBButton.x + 10, viewDBButton.y + 5 }, 20, -2, BLACK);
                 if (CheckCollisionPointRec(GetMousePosition(), viewDBButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
                     viewDatabase();
+                    framesCounter = 0;
+                    takenBooksAngle = 0.0f;
                 }
-
-                // Add Book button
+                
                 Rectangle addBookButton = { dropdownBounds.x + 10, viewDBButton.y + 40, 100, 30 };
                 DrawRectangleRec(addBookButton, GREEN);
                 DrawTextEx(customFont, "Add Book", { addBookButton.x + 10, addBookButton.y + 5 }, 20, -2, BLACK);
-                if (CheckCollisionPointRec(GetMousePosition(), addBookButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                    // Implement functionality for adding a book
+                if (CheckCollisionPointRec(GetMousePosition(), addBookButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {                    
                     addBook();
                     framesCounter = 0;
+                    takenBooksAngle = 0.0f;
                 }
-
-                // Remove Book button
+                
                 Rectangle removeBookButton = { dropdownBounds.x + 10, addBookButton.y + 40, 100, 30 };
                 DrawRectangleRec(removeBookButton, GREEN);
                 DrawTextEx(customFont, "Del Book", { removeBookButton.x + 10, removeBookButton.y + 5 }, 20, -2, BLACK);
-                if (CheckCollisionPointRec(GetMousePosition(), removeBookButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                    // Implement functionality for removing a book
+                if (CheckCollisionPointRec(GetMousePosition(), removeBookButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {                    
                     cout << "Book removed\n";
+                    framesCounter = 0;
+                    takenBooksAngle = 0.0f;
                 }
             }
         }

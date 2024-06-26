@@ -1,15 +1,8 @@
 ﻿  dashboard.cpp
-C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(138,20): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(430,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(502,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(502,95): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(502,82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(502,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  main.cpp
-  mainMenu.cpp
-C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,56): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
-C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,56): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,91): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
-C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,91): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
-  librarySystem.vcxproj -> C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\x64\Debug\librarySystem.exe
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(136,20): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(423,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(494,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(494,95): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(494,82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(494,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  librarySystem.vcxproj -> C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\x64\Debug\librarySystem.exe
