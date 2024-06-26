@@ -23,6 +23,11 @@ private:
 	void viewDatabase();
 	void addBook();
 	void DrawInputBox(Rectangle textBox, char* inputText, int& letterCount, bool mouseOnText, int framesCounter);
+	void takeBook(int id);
+	void returnBook(int id);
+	int getTotalBooks();
+	int getTakenBooks();
+	void generateBooks();
 public:
 	int screenWidth = 800;
 	int screenHeight = 450;

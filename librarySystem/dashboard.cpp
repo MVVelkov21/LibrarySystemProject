@@ -11,7 +11,8 @@ void dashboard::createDatabase() {
         "TITLE TEXT NOT NULL, "
         "AUTHOR TEXT NOT NULL, "
         "GENRE TEXT NOT NULL, "
-        "PUBLICATION_DATE TEXT NOT NULL);";
+        "PUBLICATION_DATE TEXT NOT NULL, "
+        "STATUS TEXT NOT NULL DEFAULT 'FREE');"; // Add STATUS column with default value 'FREE'
 
     char* messageError;
     exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
@@ -313,6 +314,144 @@ void dashboard::addBook() {
     }
 }
 
+void dashboard::takeBook(int id) {
+    sqlite3* DB;
+    int exit = sqlite3_open("books.db", &DB);
+    if (exit) {
+        cerr << "Can't open database: " << sqlite3_errmsg(DB) << endl;
+        return;
+    }
+
+    string sql = "UPDATE BOOKS SET STATUS = 'TAKEN' WHERE ID = " + to_string(id) + ";";
+
+    char* messageError;
+    exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
+
+    if (exit != SQLITE_OK) {
+        cerr << "Error updating book status: " << messageError << endl;
+        sqlite3_free(messageError);
+    }
+    else {
+        cout << "Book taken successfully" << endl;
+    }
+
+    sqlite3_close(DB);
+}
+
+void dashboard::returnBook(int id) {
+    sqlite3* DB;
+    int exit = sqlite3_open("books.db", &DB);
+    if (exit) {
+        cerr << "Can't open database: " << sqlite3_errmsg(DB) << endl;
+        return;
+    }
+
+    string sql = "UPDATE BOOKS SET STATUS = 'FREE' WHERE ID = " + to_string(id) + ";";
+
+    char* messageError;
+    exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
+
+    if (exit != SQLITE_OK) {
+        cerr << "Error updating book status: " << messageError << endl;
+        sqlite3_free(messageError);
+    }
+    else {
+        cout << "Book returned successfully" << endl;
+    }
+
+    sqlite3_close(DB);
+}
+
+int dashboard::getTotalBooks() {
+    sqlite3* DB;
+    int exit = sqlite3_open("books.db", &DB);
+    if (exit) {
+        cerr << "Can't open database: " << sqlite3_errmsg(DB) << endl;
+        return -1;
+    }
+
+    string sql = "SELECT COUNT(*) FROM BOOKS;";
+
+    int totalBooks = 0;
+    sqlite3_stmt* stmt;
+    exit = sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, 0);
+    if (exit != SQLITE_OK) {
+        cerr << "Error preparing SQL statement: " << sqlite3_errmsg(DB) << endl;
+        return -1;
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        totalBooks = sqlite3_column_int(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(DB);
+    return totalBooks;
+}
+
+int dashboard::getTakenBooks() {
+    sqlite3* DB;
+    int exit = sqlite3_open("books.db", &DB);
+    if (exit) {
+        cerr << "Can't open database: " << sqlite3_errmsg(DB) << endl;
+        return -1;
+    }
+
+    string sql = "SELECT COUNT(*) FROM BOOKS WHERE STATUS = 'TAKEN';";
+
+    int takenBooks = 0;
+    sqlite3_stmt* stmt;
+    exit = sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, 0);
+    if (exit != SQLITE_OK) {
+        cerr << "Error preparing SQL statement: " << sqlite3_errmsg(DB) << endl;
+        return -1;
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        takenBooks = sqlite3_column_int(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(DB);
+    return takenBooks;
+}
+
+void dashboard::generateBooks() {
+    sqlite3* DB;
+    int exit = sqlite3_open("books.db", &DB);
+    if (exit) {
+        cerr << "Can't open database: " << sqlite3_errmsg(DB) << endl;
+        return;
+    }
+
+    const char* genres[] = { "Fiction", "Non-Fiction", "Science", "History", "Art" };
+    int numGenres = sizeof(genres) / sizeof(genres[0]);
+
+    srand(time(0)); // Seed random number generator
+
+    for (int i = 0; i < 100; i++) {
+        string isbn = to_string(rand() % 1000000000 + 100000000); // Generate random ISBN
+        string title = "Book " + to_string(i + 1); // Generate title
+        string author = "Author " + to_string(rand() % 10 + 1); // Generate author
+        string genre = genres[rand() % numGenres]; // Generate random genre
+        string pubDate = to_string(rand() % 2022 + 1900) + "-" + to_string(rand() % 12 + 1) + "-" + to_string(rand() % 28 + 1); // Generate random publication date
+        string status = (rand() % 2 == 0) ? "FREE" : "TAKEN"; // Generate random status
+
+        string sql = "INSERT INTO BOOKS (ISBN, TITLE, AUTHOR, GENRE, PUBLICATION_DATE, STATUS) VALUES ('" +
+            isbn + "', '" + title + "', '" + author + "', '" + genre + "', '" + pubDate + "', '" + status + "');";
+
+        char* messageError;
+        exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
+
+        if (exit != SQLITE_OK) {
+            cerr << "Error inserting data: " << messageError << endl;
+            sqlite3_free(messageError);
+        }
+    }
+
+    sqlite3_close(DB);
+}
+
 void dashboard::windowInit() {
     customFont = LoadFont("../assets/fonts/consola.ttf");
 
@@ -326,6 +465,11 @@ void dashboard::windowInit() {
     framesCounter = 0;
     showDropdown = false;
 
+    int totalBooks = getTotalBooks(); // Get total number of books from database
+    int takenBooks = getTakenBooks(); // Get total number of taken books from database
+
+    float takenBooksAngle = 0.0f; // Initialize taken books angle
+
     while (!WindowShouldClose()) {
         framesCounter++;
 
@@ -336,17 +480,16 @@ void dashboard::windowInit() {
 
         DrawTextEx(customFont, "DASHBOARD", { (800 - MeasureTextEx(customFont, "DASHBOARD", 80, -3).x) / 2, (float)450 / 8 - 50 }, 80, -3, GREEN);
 
-        float takenBooks = 20.0f * progress;
-        float totalBooks = 100.0f;
-        float takenBooksAngle = 360.0f * (takenBooks / totalBooks);
+        // Animate taken books angle
+        takenBooksAngle = min(360.0f * (takenBooks / (float)totalBooks), takenBooksAngle + 10.0f * progress);
 
         DrawCircleSector({ (float)screenWidth / 6, (float)screenHeight / 3 + 20 }, 70, 0, takenBooksAngle, 100, RED);
         DrawCircleSector({ (float)screenWidth / 6, (float)screenHeight / 3 + 20 }, 70, takenBooksAngle, 360, 100, GREEN);
 
         DrawTextEx(customFont, "Taken Books", { 10, 280 }, 20, -2, RED);
-        DrawTextEx(customFont, TextFormat("%.0f%%", (takenBooks / totalBooks) * 100), { 10, 300 }, 20, -2, RED);
+        DrawTextEx(customFont, TextFormat("%.0f%%", (takenBooks / (float)totalBooks) * 100), { 10, 300 }, 20, -2, RED);
         DrawTextEx(customFont, "Free Books", { 25.0f + MeasureTextEx(customFont, "Taken Books", 20, -2).x, 280 }, 20, -2, GREEN);
-        DrawTextEx(customFont, TextFormat("%.0f%%", ((totalBooks - takenBooks) / totalBooks) * 100), { 25.0f + MeasureTextEx(customFont, "Taken Books", 20, -2).x, 300 }, 20, -2, GREEN);
+        DrawTextEx(customFont, TextFormat("%.0f%%", ((totalBooks - takenBooks) / (float)totalBooks) * 100), { 25.0f + MeasureTextEx(customFont, "Taken Books", 20, -2).x, 300 }, 20, -2, GREEN);
 
         float barWidth = 45.0f;
         float barSpacing = 25.0f;
