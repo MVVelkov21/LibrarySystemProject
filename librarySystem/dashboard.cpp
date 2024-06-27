@@ -445,6 +445,145 @@ void dashboard::generateBooks() {
     sqlite3_close(DB);
 }
 
+void dashboard::deleteBook() {
+    char title[MAX_INPUT_CHARS + 1] = "\0";
+    int titleCount = 0;
+
+    Rectangle titleBox = { 300, 150, 225, 30 };  // Adjusted position to center
+    Rectangle searchButton = { 300, 200, 100, 30 };  // Adjusted position to center
+    Rectangle cancelButton = { 425, 200, 100, 30 };  // Adjusted position to center
+
+    bool mouseOnTitle = false;
+    int framesCounter = 0;
+
+    while (!WindowShouldClose()) {
+        framesCounter++;
+
+        mouseOnTitle = CheckCollisionPointRec(GetMousePosition(), titleBox);
+
+        if (mouseOnTitle) {
+            SetMouseCursor(MOUSE_CURSOR_IBEAM);
+
+            int key = GetCharPressed();
+            while (key > 0) {
+                if ((key >= 32) && (key <= 125)) {
+                    if (titleCount < MAX_INPUT_CHARS) {
+                        title[titleCount] = (char)key;
+                        title[titleCount + 1] = '\0';
+                        titleCount++;
+                    }
+                }
+                key = GetCharPressed();
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE)) {
+                if (titleCount > 0) title[--titleCount] = '\0';
+            }
+        }
+        else {
+            SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+        }
+
+        if (CheckCollisionPointRec(GetMousePosition(), searchButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            sqlite3* DB;
+            sqlite3_stmt* stmt;
+
+            int exit = sqlite3_open("books.db", &DB);
+            if (exit) {
+                cerr << "Can't open database: " << sqlite3_errmsg(DB) << endl;
+                break;
+            }
+
+            string sql = "SELECT * FROM BOOKS WHERE TITLE LIKE '%" + string(title) + "%';";
+            sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, 0);
+
+            vector<string> results;
+            while (sqlite3_step(stmt) == SQLITE_ROW) {
+                int id = sqlite3_column_int(stmt, 0);
+                const unsigned char* bookTitle = sqlite3_column_text(stmt, 2);
+                string result = to_string(id) + " | " + string(reinterpret_cast<const char*>(bookTitle));
+                results.push_back(result);
+            }
+
+            sqlite3_finalize(stmt);
+            sqlite3_close(DB);
+
+            bool selectingBook = true;
+            int selectedBook = -1;
+
+            while (selectingBook && !WindowShouldClose()) {
+                BeginDrawing();
+                ClearBackground(BLACK);
+
+                DrawTextEx(customFont, "Select a Book to Delete", { (float)screenWidth/ 2 - MeasureText("Select a Book to Delete", 40) / 2, 40}, 40, 2, GREEN);  // Centered and uniform size
+
+                int yOffset = 100;
+                for (size_t i = 0; i < results.size(); ++i) {
+                    DrawTextEx(customFont, results[i].c_str(), { 300, static_cast<float>(yOffset) }, 20, 2, GREEN);  // Centered and uniform size
+                    yOffset += 30;
+                }
+
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                    Vector2 mousePos = GetMousePosition();
+                    int index = (mousePos.y - 100) / 30;
+                    if (index >= 0 && index < results.size()) {
+                        selectedBook = index;
+                        selectingBook = false;
+                    }
+                }
+
+                EndDrawing();
+            }
+
+            if (selectedBook != -1) {
+                string selected = results[selectedBook];
+                int id = stoi(selected.substr(0, selected.find(" | ")));
+
+                exit = sqlite3_open("books.db", &DB);
+                if (exit) {
+                    cerr << "Can't open database: " << sqlite3_errmsg(DB) << endl;
+                    break;
+                }
+
+                sql = "DELETE FROM BOOKS WHERE ID = " + to_string(id) + ";";
+                exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, 0);
+
+                if (exit != SQLITE_OK) {
+                    cerr << "Error Deleting Data: " << sqlite3_errmsg(DB) << endl;
+                }
+                else {
+                    cout << "Book deleted successfully" << endl;
+                }
+
+                sqlite3_close(DB);
+                break;
+            }
+        }
+
+        if (CheckCollisionPointRec(GetMousePosition(), cancelButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            break;
+        }
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        DrawTextEx(customFont, "Delete Book", { 300, 40 }, 40, 2, GREEN);  // Centered and uniform size
+
+        DrawTextEx(customFont, "Title:", { 220, 158 }, 20, 2, GREEN);  // Centered and uniform size
+        DrawInputBox(titleBox, title, titleCount, mouseOnTitle, framesCounter);
+
+        DrawRectangleRec(searchButton, DARKGRAY);
+        DrawTextEx(customFont, "Search", { 310, 205 }, 20, 2, GREEN);  // Centered and uniform size
+
+        DrawRectangleRec(cancelButton, DARKGRAY);
+        DrawTextEx(customFont, "Cancel", { 440, 205 }, 20, 2, GREEN);  // Centered and uniform size
+
+        EndDrawing();
+    }
+}
+
+
+
 void dashboard::windowInit() {
     customFont = LoadFont("../assets/fonts/consola.ttf");
 
@@ -541,6 +680,7 @@ void dashboard::windowInit() {
                 DrawTextEx(customFont, "Del Book", { removeBookButton.x + 10, removeBookButton.y + 5 }, 20, -2, BLACK);
                 if (CheckCollisionPointRec(GetMousePosition(), removeBookButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {                    
                     cout << "Book removed\n";
+                    deleteBook();
                     framesCounter = 0;
                     takenBooksAngle = 0.0f;
                 }

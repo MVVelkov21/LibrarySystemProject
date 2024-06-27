@@ -28,6 +28,7 @@ private:
 	int getTotalBooks();
 	int getTakenBooks();
 	void generateBooks();
+	void deleteBook();
 public:
 	int screenWidth = 800;
 	int screenHeight = 450;

@@ -1,8 +1,9 @@
 ﻿  dashboard.cpp
 C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(136,20): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(423,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(494,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(494,95): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(494,82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(494,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(528,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(633,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(633,95): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(633,82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(633,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   librarySystem.vcxproj -> C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\x64\Debug\librarySystem.exe
