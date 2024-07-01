@@ -14,8 +14,7 @@ void mainMenu::windowInit() {
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             Vector2 mousePosition = GetMousePosition();
 
-            if (CheckCollisionPointRec(mousePosition, buttonRect1)) {
-                printf("Button 1 clicked!\n");
+            if (CheckCollisionPointRec(mousePosition, buttonRect1)) {                
                 dash.windowInit();
             }
         }

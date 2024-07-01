@@ -1,5 +1,5 @@
 #pragma once
-#include "precompiledHeader.h"
+#include "book.h"
 
 class dashboard {
 private:
@@ -18,17 +18,11 @@ private:
 	const float dropdownSpeed = 5.0f;
 
 	void createDatabase();
-	void insertBook(const string& isbn, const string& title, const string& author, const string& genre, const string& pubDate);
 	void getBooksTaken(int* booksTaken, const char** genres, int numGenres);
 	void viewDatabase();
-	void addBook();
-	void DrawInputBox(Rectangle textBox, char* inputText, int& letterCount, bool mouseOnText, int framesCounter);
-	void takeBook(int id);
-	void returnBook(int id);
 	int getTotalBooks();
 	int getTakenBooks();
-	void generateBooks();
-	void deleteBook();
+	
 public:
 	int screenWidth = 800;
 	int screenHeight = 450;

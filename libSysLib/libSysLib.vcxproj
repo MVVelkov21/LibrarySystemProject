@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="book.h" />
     <ClInclude Include="dashboard.h" />
     <ClInclude Include="mainMenu.h" />
     <ClInclude Include="precompiledHeader.h" />

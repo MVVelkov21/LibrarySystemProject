@@ -24,5 +24,8 @@
     <ClInclude Include="dashboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="book.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
