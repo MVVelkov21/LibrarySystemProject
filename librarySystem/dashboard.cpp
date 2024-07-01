@@ -87,13 +87,13 @@ void dashboard::viewDatabase() {
     if (exit) {
         cerr << "Can't open database: " << sqlite3_errmsg(DB) << endl;
         return;
-    }
+    }    
 
     string sql = "SELECT * FROM BOOKS;";
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, 0);
 
     const int maxRecords = 1000;
-    vector<string> records;
+    vector<pair<string, string>> records; // pair of record string and status
     while (sqlite3_step(stmt) == SQLITE_ROW && records.size() < maxRecords) {
         int id = sqlite3_column_int(stmt, 0);
         const unsigned char* isbn = sqlite3_column_text(stmt, 1);
@@ -101,6 +101,7 @@ void dashboard::viewDatabase() {
         const unsigned char* author = sqlite3_column_text(stmt, 3);
         const unsigned char* genre = sqlite3_column_text(stmt, 4);
         const unsigned char* pubDate = sqlite3_column_text(stmt, 5);
+        const unsigned char* status = sqlite3_column_text(stmt, 6);
 
         string record = to_string(id) + " | " +
             string(reinterpret_cast<const char*>(isbn)) + " | " +
@@ -108,39 +109,122 @@ void dashboard::viewDatabase() {
             string(reinterpret_cast<const char*>(author)) + " | " +
             string(reinterpret_cast<const char*>(genre)) + " | " +
             string(reinterpret_cast<const char*>(pubDate));
-        records.push_back(record);
+
+        records.push_back(make_pair(record, string(reinterpret_cast<const char*>(status))));
     }
 
     sqlite3_finalize(stmt);
     sqlite3_close(DB);
 
     bool viewingDatabase = true;
-    int scrollOffset = 0; 
-    const int maxVisibleLines = 20; 
-    const int lineHeight = 20; 
+    int selectedIndex = 0; // Index of the currently selected record
+    int scrollOffset = 0;
+    const int maxVisibleLines = 20;
+    const int lineHeight = 20;
     const int tableWidth = 800;
+    const Vector2 mousePos = GetMousePosition();
+    const float boxPadding = 2.0f; // Padding around the selected record
 
     while (viewingDatabase && !WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
-        
+
         int startIndex = scrollOffset;
         int endIndex = min(scrollOffset + maxVisibleLines, static_cast<int>(records.size()));
 
         int yOffset = 20;
         for (int i = startIndex; i < endIndex; ++i) {
-            DrawTextEx(customFont, records[i].c_str(), { 20, static_cast<float>(yOffset) }, 20, 1, GREEN);
+            // Calculate text bounds for collision detection
+            Vector2 textSize = MeasureTextEx(customFont, records[i].first.c_str(), 20, 1);
+            Rectangle textBounds = { 20, static_cast<float>(yOffset), textSize.x, lineHeight };
+
+            // Check if mouse is hovering over this record
+            if (CheckCollisionPointRec(mousePos, textBounds)) {
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                    // Update database with new status for the selected book
+                    int bookId = i + 1; // SQL IDs start from 1
+                    string currentStatus = records[i].second;
+                    string newStatus = (currentStatus == "FREE") ? "TAKEN" : "FREE";
+
+                    if (sqlite3_open("books.db", &DB) == SQLITE_OK) {
+                        string updateSql = "UPDATE BOOKS SET STATUS = '" + newStatus + "' WHERE ID = " + to_string(bookId) + ";";
+                        char* errMsg;
+                        if (sqlite3_exec(DB, updateSql.c_str(), NULL, 0, &errMsg) == SQLITE_OK) {
+                            cout << "Book status updated successfully" << endl;
+                            // Update local records
+                            records[i].second = newStatus;
+                        }
+                        else {
+                            cerr << "Error updating book status: " << errMsg << endl;
+                            sqlite3_free(errMsg);
+                        }
+                        sqlite3_close(DB);
+                    }
+                    else {
+                        cerr << "Can't open database for update" << endl;
+                    }
+                }
+            }
+
+            // Draw text with custom font
+            Color textColor = (records[i].second == "TAKEN") ? RED : GREEN;
+            DrawTextEx(customFont, records[i].first.c_str(), { 20, static_cast<float>(yOffset) }, 20, 1, textColor);
+
             yOffset += lineHeight;
         }
-        
+
+        // Handle mouse scroll wheel to navigate records and change selection
         int scroll = GetMouseWheelMove();
         if (scroll != 0) {
-            scrollOffset -= scroll;
-            if (scrollOffset < 0) {
-                scrollOffset = 0;
+            // Invert scroll direction
+            selectedIndex -= scroll;
+            if (selectedIndex < 0) {
+                selectedIndex = 0;
             }
-            else if (scrollOffset > static_cast<int>(records.size()) - maxVisibleLines) {
-                scrollOffset = static_cast<int>(records.size()) - maxVisibleLines;
+            else if (selectedIndex >= static_cast<int>(records.size())) {
+                selectedIndex = static_cast<int>(records.size()) - 1;
+            }
+
+            // Adjust scrollOffset to keep selectedIndex within visible range
+            if (selectedIndex < scrollOffset) {
+                scrollOffset = selectedIndex;
+            }
+            else if (selectedIndex >= scrollOffset + maxVisibleLines) {
+                scrollOffset = selectedIndex - maxVisibleLines + 1;
+            }
+        }
+
+        // Draw box around selected record
+        if (selectedIndex >= startIndex && selectedIndex < endIndex) {
+            Vector2 selectedTextSize = MeasureTextEx(customFont, records[selectedIndex].first.c_str(), 20, 1);
+            Rectangle selectedTextBounds = { 20, static_cast<float>(20 + (selectedIndex - startIndex) * lineHeight), selectedTextSize.x, lineHeight };
+
+            // Draw box around selected record
+            DrawRectangleLinesEx({ selectedTextBounds.x - boxPadding, selectedTextBounds.y - boxPadding, selectedTextBounds.width + 2 * boxPadding, selectedTextBounds.height + 2 * boxPadding }, 2, GRAY);
+        }
+
+        if (IsKeyPressed(KEY_ENTER)) {
+            // Update database with new status for the selected book
+            int bookId = selectedIndex + 1; // SQL IDs start from 1
+            string currentStatus = records[selectedIndex].second;
+            string newStatus = (currentStatus == "FREE") ? "TAKEN" : "FREE";
+
+            if (sqlite3_open("books.db", &DB) == SQLITE_OK) {
+                string updateSql = "UPDATE BOOKS SET STATUS = '" + newStatus + "' WHERE ID = " + to_string(bookId) + ";";
+                char* errMsg;
+                if (sqlite3_exec(DB, updateSql.c_str(), NULL, 0, &errMsg) == SQLITE_OK) {
+                    cout << "Book status updated successfully" << endl;
+                    // Update local records
+                    records[selectedIndex].second = newStatus;
+                }
+                else {
+                    cerr << "Error updating book status: " << errMsg << endl;
+                    sqlite3_free(errMsg);
+                }
+                sqlite3_close(DB);
+            }
+            else {
+                cerr << "Can't open database for update" << endl;
             }
         }
 
@@ -149,8 +233,9 @@ void dashboard::viewDatabase() {
         }
 
         EndDrawing();
-    }
+    }   
 }
+
 
 #define MAX_INPUT_CHARS 100
 
