@@ -1,18 +1,19 @@
 ﻿  book.cpp
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\book.cpp(223,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\book.cpp(316,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\book.cpp(223,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\book.cpp(316,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   dashboard.cpp
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(143,20): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(298,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(298,95): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(298,82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(298,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(143,20): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(298,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(298,95): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(298,82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\dashboard.cpp(298,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   main.cpp
   mainMenu.cpp
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,56): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,56): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,91): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
-C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,91): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,56): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,56): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,91): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\librarySystem\mainMenu.cpp(11,91): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   Generating Code...
+  sqlite3.c
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  librarySystem.vcxproj -> C:\Users\admin\Documents\GitHub\2324-pp-10v-individual-assignment-MVVelkov21\x64\Debug\librarySystem.exe
+  librarySystem.vcxproj -> C:\Users\MVVelkov21\source\repos\2324-pp-10v-individual-assignment-MVVelkov21\x64\Debug\librarySystem.exe
